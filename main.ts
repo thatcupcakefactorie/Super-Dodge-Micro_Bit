@@ -46,9 +46,10 @@ input.onButtonPressed(Button.A, function () {
     if (gameActive) {
         if (!(GameOver)) {
             music.play(music.createSoundExpression(WaveShape.Sine, 1725, 1725, 204, 155, 200, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
-            Player.move(-1)
             if (Player.get(LedSpriteProperty.X) <= 0) {
                 Player.set(LedSpriteProperty.X, 4)
+            } else {
+                Player.move(-1)
             }
         }
     }
@@ -57,6 +58,48 @@ input.onButtonPressed(Button.A, function () {
         DifficultyMenu = false
     }
 })
+function Opening () {
+    gameActive = false
+    DifficultyMenu = false
+    GameOver = false
+    basic.showString("Super Dodge!")
+    basic.showLeds(`
+        # # . # #
+        . . # . .
+        . . # . .
+        . # . # .
+        # # # # #
+        `)
+    basic.pause(2000)
+    for (let index = 0; index < 3; index++) {
+        basic.showLeds(`
+            # # . # #
+            . . # . .
+            . . # . .
+            . . # . .
+            # # # # #
+            `)
+        music.play(music.createSoundExpression(WaveShape.Sawtooth, 452, 452, 151, 151, 500, SoundExpressionEffect.Tremolo, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
+        basic.pause(100)
+        basic.showLeds(`
+            # # . # #
+            . . # . .
+            . . # . .
+            . # . # .
+            # # # # #
+            `)
+        basic.pause(100)
+    }
+    basic.pause(2000)
+    basic.clearScreen()
+    basic.showString("Difficulty?")
+    DifficultyMenu = true
+    while (DifficultyMenu) {
+        basic.showNumber(Difficulty)
+    }
+    basic.clearScreen()
+    startGame(0)
+}
 function gameOverSequence () {
     music.stopAllSounds()
     if (Enemy.length > 0) {
@@ -77,9 +120,10 @@ input.onButtonPressed(Button.B, function () {
     if (gameActive) {
         if (!(GameOver)) {
             music.play(music.createSoundExpression(WaveShape.Sine, 1725, 1725, 204, 155, 200, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
-            Player.move(1)
             if (Player.get(LedSpriteProperty.X) >= 4) {
                 Player.set(LedSpriteProperty.X, 0)
+            } else {
+                Player.move(1)
             }
         }
     }
@@ -89,69 +133,29 @@ input.onButtonPressed(Button.B, function () {
             Difficulty = 0
         }
     }
-    // This doesn't work. the "show string" block can't be skipped and i cant be bothered to try and recode the entire text system from scratch.
-    if (false) {
-        MenuIsBeingSkipped = true
-        music.stopAllSounds()
-        basic.clearScreen()
-    }
 })
 let newPosition: game.LedSprite = null
+let Difficulty = 0
 let LoopCount = 0
 let Enemy: game.LedSprite[] = []
 let Player: game.LedSprite = null
-let Difficulty = 0
-let MenuIsBeingSkipped = false
 let GameOver = false
 let DifficultyMenu = false
 let gameActive = false
+basic.showLeds(`
+    . . # . .
+    . . # # .
+    . . # . .
+    # # # # #
+    . # # # .
+    `)
 gameActive = false
 DifficultyMenu = false
-let SkippableMenu = true
 GameOver = false
-basic.showString("Super Dodge!")
-SkippableMenu = true
-basic.showLeds(`
-    # # . # #
-    . . # . .
-    . . # . .
-    . # . # .
-    # # # # #
-    `)
-basic.pause(2000)
-for (let index = 0; index < 3; index++) {
-    basic.showLeds(`
-        # # . # #
-        . . # . .
-        . . # . .
-        . . # . .
-        # # # # #
-        `)
-    music.play(music.createSoundExpression(WaveShape.Sawtooth, 452, 452, 151, 151, 500, SoundExpressionEffect.Tremolo, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
-    if (MenuIsBeingSkipped) {
-        continue;
-    }
-    basic.pause(100)
-    basic.showLeds(`
-        # # . # #
-        . . # . .
-        . . # . .
-        . # . # .
-        # # # # #
-        `)
-    if (MenuIsBeingSkipped) {
-        continue;
-    }
-    basic.pause(100)
-}
+basic.pause(5000)
+basic.clearScreen()
+basic.showString("V.1.1.1")
+basic.showIcon(IconNames.Happy)
 basic.pause(2000)
 basic.clearScreen()
-SkippableMenu = true
-basic.showString("Difficulty?")
-SkippableMenu = false
-DifficultyMenu = true
-while (DifficultyMenu) {
-    basic.showNumber(Difficulty)
-}
-basic.clearScreen()
-startGame(0)
+Opening()
